@@ -22,7 +22,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 
-
 /*--------Register Elasticsearch--------*/
 var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
     .DefaultIndex("products");
@@ -30,7 +29,6 @@ var client = new ElasticClient(settings);
 builder.Services.AddSingleton<IElasticClient>(client);
 builder.Services.AddScoped<ElasticService>();
 builder.Services.AddHostedService<ElasticSyncService>();
-
 
 
 var app = builder.Build();
