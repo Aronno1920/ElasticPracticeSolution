@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Nest;
-using SalesApi.Data;
-using SalesApi.Entities;
-using SalesApi.Middleware;
-using SalesApi.Services;
+using PracticeApi.Data;
+using PracticeApi.Entities;
+using PracticeApi.Middleware;
+using PracticeApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

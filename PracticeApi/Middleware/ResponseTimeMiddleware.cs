@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace SalesApi.Middleware
+namespace PracticeApi.Middleware
 {
     public class ResponseTimeMiddleware
     {

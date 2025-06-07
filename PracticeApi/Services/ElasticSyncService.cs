@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SalesApi.Data;
+using PracticeApi.Data;
 
-namespace SalesApi.Services
+namespace PracticeApi.Services
 {
     public class ElasticSyncService : BackgroundService
     {

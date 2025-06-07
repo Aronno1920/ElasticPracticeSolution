@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SalesApi.Data;
-using SalesApi.Services;
-using SalesCore.Entities;
+using PracticeApi.Data;
+using PracticeApi.Entities;
+using PracticeApi.Services;
 
-namespace SalesApi.Controllers
+namespace PracticeApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]/[action]")]

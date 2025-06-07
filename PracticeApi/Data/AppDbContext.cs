@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SalesCore.Entities;
+using PracticeApi.Entities;
 
-namespace SalesApi.Data
+
+namespace PracticeApi.Data
 {
     public class AppDbContext : DbContext
     {

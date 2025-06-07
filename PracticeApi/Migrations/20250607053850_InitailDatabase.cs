@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace SalesApi.Migrations
+namespace PracticeApi.Migrations
 {
     /// <inheritdoc />
     public partial class InitailDatabase : Migration

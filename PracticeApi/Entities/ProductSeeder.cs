@@ -1,8 +1,7 @@
 ﻿using Bogus;
-using SalesApi.Data;
-using SalesCore.Entities;
+using PracticeApi.Data;
 
-namespace SalesApi.Entities
+namespace PracticeApi.Entities
 {
     public class ProductSeeder
     {

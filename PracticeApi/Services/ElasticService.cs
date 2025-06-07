@@ -1,7 +1,7 @@
 ﻿using Nest;
-using SalesCore.Entities;
+using PracticeApi.Entities;
 
-namespace SalesApi.Services
+namespace PracticeApi.Services
 {
     public class ElasticService
     {
