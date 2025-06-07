@@ -6,7 +6,7 @@ namespace SalesApi.Entities
 {
     public class ProductSeeder
     {
-        public static async Task SeedAsync(AppDbContext context, int count = 10000)
+        public static async Task SeedAsync(AppDbContext context, int count = 100000)
         {
             if (context.Products.Any()) return;
 

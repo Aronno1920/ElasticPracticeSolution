@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Nest;
 using SalesApi.Data;
 using SalesApi.Entities;
+using SalesApi.Middleware;
 using SalesApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +34,10 @@ builder.Services.AddHostedService<ElasticSyncService>();
 
 
 var app = builder.Build();
+
+/*--------Register Middleware--------*/
+app.UseMiddleware<ResponseTimeMiddleware>();
+
 
 /*--------SEED DATA--------*/
 using (var scope = app.Services.CreateScope())

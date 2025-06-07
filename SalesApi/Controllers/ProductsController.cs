@@ -7,7 +7,7 @@ using SalesCore.Entities;
 namespace SalesApi.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
 
     public class ProductsController : Controller
     {
@@ -18,10 +18,9 @@ namespace SalesApi.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get() => Ok(await _context.Products.ToListAsync());
 
         [HttpPost]
+        [ActionName("Create")]
         public async Task<IActionResult> Create(Product product)
         {
             _context.Products.Add(product);
@@ -29,14 +28,9 @@ namespace SalesApi.Controllers
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var product = await _context.Products.FindAsync(id);
-            return product == null ? NotFound() : Ok(product);
-        }
 
         [HttpPut("{id}")]
+        [ActionName("Update")]
         public async Task<IActionResult> Update(int id, Product product)
         {
             if (id != product.Id) return BadRequest();
@@ -45,7 +39,9 @@ namespace SalesApi.Controllers
             return NoContent();
         }
 
+
         [HttpDelete("{id}")]
+        [ActionName("Delete")]
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -56,7 +52,22 @@ namespace SalesApi.Controllers
         }
 
 
-        [HttpGet("search/ef")]
+        [HttpGet("{id}")]
+        [ActionName("GetById")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            return product == null ? NotFound() : Ok(product);
+        }
+
+
+        [HttpGet]
+        [ActionName("GetAll")]
+        public async Task<IActionResult> Get() => Ok(await _context.Products.ToListAsync());
+
+
+        [HttpGet]
+        [ActionName("SearchEf")]
         public async Task<IActionResult> SearchEf(string query)
         {
             var result = await _context.Products
@@ -67,12 +78,13 @@ namespace SalesApi.Controllers
             return Ok(result);
         }
 
-        [HttpGet("search/es")]
+
+        [HttpGet]
+        [ActionName("SearchEs")]
         public async Task<IActionResult> SearchEs([FromServices] ElasticService elasticService, string query)
         {
             var result = await elasticService.SearchAsync(query);
             return Ok(result);
         }
-
     }
 }
