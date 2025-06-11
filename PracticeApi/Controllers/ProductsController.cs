@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PracticeApi.Data;
-using PracticeApi.Entities;
+using PracticeApi.Entities.Model;
 using PracticeApi.Services;
 
 namespace PracticeApi.Controllers
@@ -12,10 +12,12 @@ namespace PracticeApi.Controllers
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(AppDbContext context)
+        public ProductsController(AppDbContext context, ILogger<ProductsController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
 
@@ -83,7 +85,14 @@ namespace PracticeApi.Controllers
         [ActionName("SearchEs")]
         public async Task<IActionResult> SearchEs([FromServices] ElasticService elasticService, string query)
         {
-            var result = await elasticService.SearchAsync(query);
+            //var result = await elasticService.SearchAsync(query);
+            //return Ok(result);
+
+            var result = await elasticService.SearchAsync<Product>(query, f => f
+                                .Field(p => p.Name)
+                                .Field(p => p.Description)
+                                .Field(p => p.Category));
+
             return Ok(result);
         }
     }

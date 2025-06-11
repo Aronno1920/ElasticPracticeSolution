@@ -1,7 +1,8 @@
 ﻿using Bogus;
 using PracticeApi.Data;
+using PracticeApi.Entities.Model;
 
-namespace PracticeApi.Entities
+namespace PracticeApi.Entities.Seeder
 {
     public class ProductSeeder
     {

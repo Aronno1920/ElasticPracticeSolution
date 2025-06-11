@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PracticeApi.Entities
+namespace PracticeApi.Entities.Model
 {
     public class Product
     {

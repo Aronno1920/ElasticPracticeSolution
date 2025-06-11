@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PracticeApi.Entities;
+using PracticeApi.Entities.Model;
 
 
 namespace PracticeApi.Data
@@ -12,6 +12,7 @@ namespace PracticeApi.Data
         }
 
         public DbSet<Product> Products => Set<Product>();
+        public DbSet<Customer> Customers => Set<Customer>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
