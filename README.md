@@ -36,16 +36,12 @@ Edit `PracticeApi/appsettings.json` to set your SQL Server connection string:
 
 ### Running the API
 
-1. Restore dependencies:
-
-dotnet restore
-2. Build and run the project:
-
-dotnet run --project PracticeApi
+1. Restore dependencies: `dotnet restore`
+2. Build and run the project: `dotnet run --project PracticeApi`
 3. The API will automatically:
-- Apply database migrations
-- Seed the database with products (if empty)
-- Sync products to Elasticsearch
+- `Apply database migrations`
+- `Seed the database with products (if empty)`
+- `Sync products to Elasticsearch`
 
 4. Access Swagger UI at: `https://localhost:5001/swagger`
 
