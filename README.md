@@ -1,5 +1,3 @@
-# ElasticPracticeSolution
-
 # PracticeApi
 
 A .NET 9 Web API for managing and searching products, featuring SQL Server and Elasticsearch integration.
