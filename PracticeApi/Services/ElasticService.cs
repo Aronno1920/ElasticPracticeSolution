@@ -59,23 +59,6 @@ namespace PracticeApi.Services
 
             return response;
         }
-
-
-        //public async Task<IEnumerable<T>> SearchAsync<T>(string query, Func<FieldsDescriptor<T>, IPromise<Fields>> fieldSelector) where T : class
-        //{
-        //    var response = await _client.SearchAsync<T>(s => s
-        //        .Index(GetIndexName<T>())
-        //        .Query(q => q
-        //            .MultiMatch(m => m
-        //                .Fields(fieldSelector)
-        //                .Type(TextQueryType.PhrasePrefix)
-        //                .Query(query)
-        //            )
-        //        )
-        //    );
-
-        //    return response.Documents;
-        //}
     }
 }
 
