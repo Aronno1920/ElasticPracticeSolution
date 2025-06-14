@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Nest;
 using PracticeApi.Data;
 using PracticeApi.Entities.Model;
+using PracticeApi.Middleware.Accessor;
+using PracticeApi.Middleware.Interfaces;
 using PracticeApi.Services;
 
 namespace PracticeApi.Controllers
@@ -65,35 +68,56 @@ namespace PracticeApi.Controllers
 
         [HttpGet]
         [ActionName("GetAll")]
-        public async Task<IActionResult> Get() => Ok(await _context.Products.ToListAsync());
+        public async Task<IActionResult> Get([FromServices] ITotalCountAccessor totalCountAccessor)
+        {
+            var results = await _context.Products.ToListAsync();
+            totalCountAccessor.TotalCount = results.Count;
+
+            return Ok(results);
+        }
 
 
         [HttpGet]
         [ActionName("SearchEf")]
-        public async Task<IActionResult> SearchEf(string query)
+        public async Task<IActionResult> SearchEf([FromServices] ITotalCountAccessor totalCountAccessor, string query)
         {
             var result = await _context.Products
                 .Where(p => p.Name.Contains(query) ||
                             p.Description.Contains(query) ||
                             p.Category.Contains(query))
                 .ToListAsync();
-            return Ok(result);
+
+            totalCountAccessor.TotalCount = result.Count;
+            if (result == null || !result.Any())
+            {
+                return NotFound("No products found matching the search criteria.");
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
 
 
         [HttpGet]
         [ActionName("SearchEs")]
-        public async Task<IActionResult> SearchEs([FromServices] ElasticService elasticService, string query)
+        public async Task<IActionResult> SearchEs([FromServices] ElasticService elasticService, [FromServices] ITotalCountAccessor totalCountAccessor, string query)
         {
-            //var result = await elasticService.SearchAsync(query);
-            //return Ok(result);
+            var response = await elasticService.SearchAsync<Product>(query, f => f
+                .Field(p => p.Name)
+                .Field(p => p.Description)
+                .Field(p => p.Category));
 
-            var result = await elasticService.SearchAsync<Product>(query, f => f
-                                .Field(p => p.Name)
-                                .Field(p => p.Description)
-                                .Field(p => p.Category));
+            if (!response.IsValid)
+            {
+                return StatusCode(500, response.OriginalException.Message);
+            }
 
-            return Ok(result);
+            var totalCount = response.HitsMetadata.Total.Value;
+            var items = response.Documents;
+            totalCountAccessor.TotalCount = (int)totalCount;
+
+            return Ok(items);
         }
     }
 }

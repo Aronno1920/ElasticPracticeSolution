@@ -3,6 +3,8 @@ using Nest;
 using PracticeApi.Data;
 using PracticeApi.Entities.Seeder;
 using PracticeApi.Middleware;
+using PracticeApi.Middleware.Accessor;
+using PracticeApi.Middleware.Interfaces;
 using PracticeApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,10 +44,13 @@ builder.Services.AddHostedService<ElasticSyncService>();
 //builder.Services.AddHostedService<ElasticSyncService>();
 ///////// For Single Indexing /////////
 
+builder.Services.AddScoped<ITotalCountAccessor, TotalCountAccessor>();
+
 var app = builder.Build();
 
 /*--------Register Middleware--------*/
 app.UseMiddleware<ResponseTimeMiddleware>();
+app.UseMiddleware<TotalRecordCountMiddleware>();
 
 
 /*--------SEED DATA--------*/

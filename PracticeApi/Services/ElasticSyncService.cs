@@ -55,5 +55,4 @@ namespace PracticeApi.Services
         //    await es.BulkIndexAsync(products);
         //}
     }
-
 }
