@@ -26,34 +26,62 @@ namespace PracticeApi.Controllers
 
         [HttpPost]
         [ActionName("Create")]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create([FromServices] ElasticService elasticService, Product product)
         {
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
+
+            await elasticService.IndexAsync(product, product.Id.ToString()); // Save to Elasticsearch
+
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
 
 
         [HttpPut("{id}")]
         [ActionName("Update")]
-        public async Task<IActionResult> Update(int id, Product product)
+        public async Task<IActionResult> Update([FromServices] ElasticService elasticService, int id, Product product)
         {
             if (id != product.Id) return BadRequest();
             _context.Entry(product).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+
+            await elasticService.IndexAsync(product, id.ToString()); // Update to Elasticsearch
+
             return NoContent();
         }
 
 
         [HttpDelete("{id}")]
         [ActionName("Delete")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromServices] ElasticService elasticService, int id)
         {
             var product = await _context.Products.FindAsync(id);
             if (product == null) return NotFound();
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+
+            await elasticService.DeleteAsync<Product>(id.ToString()); // Delete from Elasticsearch
+
             return NoContent();
+        }
+
+
+        [HttpDelete]
+        [ActionName("DeleteAll")]
+        public async Task<IActionResult> DeleteAll([FromServices] ElasticService elasticService)
+        {
+            var products = await _context.Products.ToListAsync();
+
+            if (products.Count == 0)
+                return NoContent();
+
+            _context.Products.RemoveRange(products);
+            await _context.SaveChangesAsync();
+
+            var ids = products.Select(p => p.Id.ToString());
+            await elasticService.BulkDeleteAsync<Product>(ids);
+
+            return Ok(new { message = $"{products.Count} products deleted from DB and Elasticsearch." });
         }
 
 
@@ -118,6 +146,14 @@ namespace PracticeApi.Controllers
             totalCountAccessor.TotalCount = (int)totalCount;
 
             return Ok(items);
+        }
+
+        [HttpGet]
+        [ActionName("CountProductEs")]
+        public async Task<IActionResult> CountProducts([FromServices] ElasticService elasticService)
+        {
+            long total = await elasticService.CountAsync<Product>();
+            return Ok(new { TotalProductsInElastic = total });
         }
     }
 }

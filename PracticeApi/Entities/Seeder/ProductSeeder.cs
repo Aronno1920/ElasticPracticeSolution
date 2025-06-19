@@ -6,7 +6,7 @@ namespace PracticeApi.Entities.Seeder
 {
     public class ProductSeeder
     {
-        public static async Task SeedAsync(AppDbContext context, int count = 200000)
+        public static async Task SeedAsync(AppDbContext context, int count = 20)
         {
             if (context.Products.Any()) return;
 

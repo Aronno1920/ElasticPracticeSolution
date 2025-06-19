@@ -6,9 +6,9 @@ namespace PracticeApi.Entities.Seeder
 {
     public class CustomerSeeder
     {
-        public static async Task SeedAsync(AppDbContext context, int count = 100000)
+        public static async Task SeedAsync(AppDbContext context, int count = 20)
         {
-            if(context.Customers.Any()) return;
+            if (context.Customers.Any()) return;
 
             var dummyCustomer = new Faker<Customer>()
                 .RuleFor(c => c.Name, f => f.Name.FullName())

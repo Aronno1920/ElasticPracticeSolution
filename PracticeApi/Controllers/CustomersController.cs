@@ -20,6 +20,26 @@ namespace PracticeApi.Controllers
             _logger = logger;
         }
 
+
+        [HttpDelete]
+        [ActionName("DeleteAll")]
+        public async Task<IActionResult> DeleteAll([FromServices] ElasticService elasticService)
+        {
+            var customers = await _context.Customers.ToListAsync();
+
+            if (customers.Count == 0)
+                return NoContent();
+
+            _context.Customers.RemoveRange(customers);
+            await _context.SaveChangesAsync();
+
+            var ids = customers.Select(p => p.Id.ToString());
+            await elasticService.BulkDeleteAsync<Product>(ids);
+
+            return Ok(new { message = $"{customers.Count} customers deleted from DB and Elasticsearch." });
+        }
+
+
         [HttpGet]
         [ActionName("SearchEf")]
         public async Task<IActionResult> SearchEf(string query)
@@ -52,6 +72,15 @@ namespace PracticeApi.Controllers
             _logger.LogInformation($"Customer found to Elasticsearch.");
 
             return Ok(result);
+        }
+
+
+        [HttpGet]
+        [ActionName("CountCustomerEs")]
+        public async Task<IActionResult> CountCustomers([FromServices] ElasticService elasticService)
+        {
+            long total = await elasticService.CountAsync<Customer>();
+            return Ok(new { TotalCustomersInElastic = total });
         }
     }
 }
